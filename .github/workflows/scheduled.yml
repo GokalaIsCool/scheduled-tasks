@@ -2,7 +2,7 @@ name: Daily Script
 
 on:
   schedule:
-    - cron: '0 21 * * *'
+    - cron: '20 21 * * *'
 
   workflow_dispatch:
 
