@@ -2,21 +2,8 @@ name: Daily Script
 
 on:
   schedule:
-    # ╔═══════════════════════════════════════════════════════════════╗
-    # ║  CHANGE THE LINE BELOW to set when your script runs          ║
-    # ║                                                                ║
-    # ║  Format:  'MINUTE HOUR * * *'                                  ║
-    # ║                                                                ║
-    # ║  Examples:                                                     ║
-    # ║    '0 9 * * *'   = 9:00 AM UTC daily                          ║
-    # ║    '30 14 * * *' = 2:30 PM UTC daily                          ║
-    # ║    '0 0 * * *'   = Midnight UTC daily                         ║
-    # ║                                                                ║
-    # ║  Use https://time.is/UTC to find your local time in UTC       ║
-    # ╚═══════════════════════════════════════════════════════════════╝
     - cron: '0 21 * * *'
 
-  # This adds a "Run workflow" button so you can test manually
   workflow_dispatch:
 
 jobs:
@@ -26,6 +13,17 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+
+      - name: Debug workspace
+        run: |
+          echo "PWD: $(pwd)"
+          echo "GITHUB_WORKSPACE: $GITHUB_WORKSPACE"
+          echo "Listing repo root:"
+          ls -la
+          echo "Listing letter_templates (if present):"
+          ls -la letter_templates || true
+          echo "Find letter_1.txt in the repo:"
+          find . -maxdepth 4 -type f -name "letter_1.txt" || true
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -39,8 +37,6 @@ jobs:
 
       - name: Run script
         env:
-          # Your secrets are available as environment variables
-          # Add more secrets in Settings > Secrets > Actions
           MY_EMAIL: ${{ secrets.MY_EMAIL }}
           MY_PASSWORD: ${{ secrets.MY_PASSWORD }}
         run: python main.py
